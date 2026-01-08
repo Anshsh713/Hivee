@@ -1,0 +1,105 @@
+.Login-Container {
+  width: 45%;
+  padding: 50px 0 20px 0;
+  height: 90%;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.Login-text {
+  color: gray;
+  font-size: 1.1rem;
+  margin-bottom: 4rem;
+}
+.error {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: gray;
+}
+.Login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.Login-Input {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  width: 90%;
+}
+.Login-Input input {
+  width: 100%;
+  font-size: 1rem;
+  color: gray;
+  padding: 0 0 0 10px;
+  height: 40px;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.Login-Input input:focus {
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.Forgot {
+  padding: 20px 0 20px 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: gray;
+}
+.Forgot:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.Submit {
+  display: flex;
+  justify-content: center;
+  width: 90%;
+  height: 40px;
+}
+.Submit button {
+  color: white;
+  font-size: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  background-color: #ff8800;
+  border: none;
+  transition: 0.2s ease-in-out;
+}
+.Submit button:hover {
+  cursor: pointer;
+  background-color: #fcac5d;
+  color: gray;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+.Social-Login-text {
+  color: gray;
+  font-weight: 600;
+}
+.socal-box {
+  text-align: center;
+  width: 100%;
+}
+.social-Platform {
+  display: flex;
+  margin-top: 5%;
+  justify-content: space-evenly;
+  padding: 0px 20px 0px 20px;
+}
+.social-Platform button {
+  height: 50px;
+  width: 50px;
+  font-size: 1.2rem;
+  background-color: transparent;
+  border: none;
+  transition: 0.2s ease-in-out;
+}
+.social-Platform button:hover {
+  color: gray;
+  cursor: pointer;
+  transform: scale(1.1);
+}

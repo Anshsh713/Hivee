@@ -1,0 +1,108 @@
+.Main {
+  background-color: #fce1bd;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Main-Container {
+  gap: 4rem;
+  position: relative;
+  border-radius: 50px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  height: 80vh;
+  width: 70vw;
+  padding-left: 1%;
+  padding-right: 1%;
+  background-color: #f7ede0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Cover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  background-color: #5e5b52;
+  width: 51%;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-right-radius: 150px;
+  border-bottom-right-radius: 150px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  height: 100%;
+  left: 0;
+  transition: 0.6s ease-in-out;
+}
+.Main-Container.signup .Cover {
+  width: 50%;
+  left: 0;
+  right: auto;
+  border-radius: 50px 150px 150px 50px;
+}
+.Main-Container.login .Cover {
+  width: 50%;
+  right: 0;
+  left: auto;
+  border-radius: 150px 50px 50px 150px;
+}
+.Main-Container.expand-left .Cover {
+  background-color: rgb(121, 116, 100);
+  width: 100%;
+  right: auto;
+  left: 0;
+  border-radius: 50px;
+}
+.Main-Container.expand-right .Cover {
+  background-color: rgb(121, 116, 100);
+  width: 100%;
+  right: 0;
+  left: auto;
+  border-radius: 50px;
+}
+.Main-Container.expand-right .Cover .Cover-text {
+  opacity: 0;
+}
+.Main-Container.expand-left .Cover .Cover-text {
+  opacity: 0;
+}
+.Main-Container.expand-left .Cover .Cover-button {
+  opacity: 0;
+}
+.Main-Container.expand-right .Cover .Cover-button {
+  opacity: 0;
+}
+.Cover-text {
+  transition: 0.1s ease-in-out;
+  text-align: center;
+  color: white;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+.Cover-text p {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+.Cover-button {
+  transition: 0.1s ease-in-out;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+}
+.Cover-button button {
+  background-color: transparent;
+  width: 40%;
+  font-size: 1rem;
+  border: white 2px solid;
+  border-radius: 10px;
+  color: white;
+}
+.Cover-button button:hover {
+  cursor: pointer;
+  background-color: white;
+  color: #5e5b52;
+  transition: 0.3s ease-in-out;
+}

@@ -12,7 +12,7 @@ export default function AuthPage() {
     setMode(expanding);
     setTimeout(() => {
       setMode(targetMode);
-    }, 700);
+    }, 800);
   };
   return (
     <div className="Main">
@@ -32,8 +32,8 @@ export default function AuthPage() {
             </button>
           </div>
         </div>
-        <Signup />
-        <Login />
+        <Signup stateReset={mode} />
+        <Login stateReset={mode} />
       </div>
     </div>
   );

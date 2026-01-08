@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signupUser = async (name, email, password) => {
-    const res = await fetch("http://localhost:5000/user/signup", {
+    const res = await fetch("http://localhost:5000/user/signup-request", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
     const data = await res.json();
     if (!data.success) throw new Error(data.message);
 
-    await loginUser(email, password);
+    return true;
   };
 
   return (

@@ -1,11 +1,12 @@
 const Hivee_User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Hivee_OTP = require("../models/OTP");
+const sendOTP = require("../utils/sendotp");
 
-exports.Signing = async (req, res) => {
+exports.SigningRequest = async (req, res) => {
   try {
     const { User_Name, User_Email, User_Password } = req.body;
-
     if (!User_Name || !User_Email || !User_Password) {
       return res.status(400).json({
         success: false,
@@ -13,18 +14,20 @@ exports.Signing = async (req, res) => {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(User_Password, 10);
+    await Hivee_OTP.deleteMany({ User_Email });
 
-    const New_Hivee_User = await Hivee_User.create({
-      User_Name,
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await Hivee_OTP.create({
       User_Email,
-      User_Password: hashedPassword,
+      otp,
+      expiresAt: Date.now() + 10 * 60 * 1000,
     });
+    await sendOTP(User_Email, otp);
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "User registered successfully",
-      userId: New_Hivee_User._id,
+      message: "OTP sent to email",
     });
   } catch (error) {
     console.error("SIGNUP ERROR:", error);
@@ -41,7 +44,57 @@ exports.Signing = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Internal server error",
+      message: "OTP sending failed",
+    });
+  }
+};
+
+exports.SigningVerify = async (req, res) => {
+  try {
+    const { User_Name, User_Email, User_Password, otp } = req.body;
+
+    const otpData = await Hivee_OTP.findOne({ User_Email });
+
+    if (!otpData) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP not found",
+      });
+    }
+
+    if (otpData.expiresAt < Date.now()) {
+      await Hivee_OTP.deleteOne({ User_Email });
+      return res.status(400).json({
+        success: false,
+        message: "OTP expired",
+      });
+    }
+
+    if (otpData.otp !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(User_Password, 10);
+
+    await Hivee_User.create({
+      User_Name: User_Name || "User",
+      User_Email,
+      User_Password: hashedPassword,
+    });
+
+    await Hivee_OTP.deleteOne({ User_Email });
+
+    return res.status(201).json({
+      success: true,
+      message: "Signup successful",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Signup failed",
     });
   }
 };

@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../Context/UserContext";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
-export default function Login() {
+export default function Login({ stateReset }) {
   const [error, setError] = useState("");
   const [loading, setloading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { loginUser } = useAuth();
   const navigate = useNavigate();
+  const [see, setSee] = useState("password");
   const handleSubmit = async (e) => {
     e.preventDefault();
     setloading(true);
@@ -18,8 +19,10 @@ export default function Login() {
       setloading(false);
       return;
     }
-    if (!email.includes("@gmail.com")) {
-      setError("Please enter a valid email");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address");
       setloading(false);
       return;
     }
@@ -39,6 +42,16 @@ export default function Login() {
     setError("");
     setloading(false);
   };
+  const togglePassword = () => {
+    setSee((state) => (state === "password" ? "text" : "password"));
+  };
+  useEffect(() => {
+    setEmail("");
+    setPassword("");
+    setError("");
+    setloading(false);
+    setSee("password");
+  }, [stateReset]);
   return (
     <div className="Login-Container">
       <div className="Login-text">
@@ -55,13 +68,21 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="password">
+            <input
+              type={see}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button type="button" onClick={togglePassword}>
+              <i
+                className={`fa-solid ${
+                  see === "password" ? "fa-eye" : "fa-eye-slash"
+                }`}
+              ></i>
+            </button>
+          </div>
         </div>
         <div className="Forgot">
           <p>Forgot Password</p>

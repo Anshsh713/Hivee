@@ -1,5 +1,7 @@
 import React, { useState } from "react"; // Getting React lib.
 import "./Signup.css"; // Joining with css
+import { useAuth } from "../../Context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Signup() {
   // Sign up component
@@ -8,6 +10,8 @@ export default function Signup() {
   const [username, setUsername] = useState(""); // Storing User Username
   const [email, setEmail] = useState(""); // Storing User Email ID
   const [password, setPassword] = useState("");
+  const { signupUser } = useAuth();
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setloading(true);
@@ -29,10 +33,12 @@ export default function Signup() {
       setloading(false);
       return;
     }
-    setError("");
-    console.log("Username:", username);
-    console.log("Email:", email);
-    console.log("Password:", password);
+    try {
+      await signupUser(username, email, password);
+      navigate("/");
+    } catch (error) {
+      setError(error.message);
+    }
     setUsername("");
     setEmail("");
     setPassword("");

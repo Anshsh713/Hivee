@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import { useAuth } from "../../Context/UserContext";
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
+
 export default function Login() {
   const [error, setError] = useState("");
   const [loading, setloading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { loginUser } = useAuth();
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setloading(true);
@@ -23,8 +28,12 @@ export default function Login() {
       setloading(false);
       return;
     }
-    console.log("Email:", email);
-    console.log("Password:", password);
+    try {
+      await loginUser(email, password);
+      navigate("/");
+    } catch (error) {
+      setError(error.message);
+    }
     setEmail("");
     setPassword("");
     setError("");

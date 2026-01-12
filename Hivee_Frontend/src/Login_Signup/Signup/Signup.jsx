@@ -10,11 +10,12 @@ export default function Signup({ stateReset }) {
   const [username, setUsername] = useState(""); // Storing User Username
   const [email, setEmail] = useState(""); // Storing User Email ID
   const [password, setPassword] = useState("");
-  const { signupUser, loginUser } = useAuth();
+  const { signupUser, loginUser, signupUser_by_verify } = useAuth();
   const navigate = useNavigate();
   const [see, setSee] = useState("password");
   const [showOtp, setShowOtp] = useState(false);
   const [otp, setOtp] = useState("");
+  const [resending, setResending] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,38 +69,29 @@ export default function Signup({ stateReset }) {
 
     setloading(true);
     setError("");
-    try {
-      const res = await fetch("http://localhost:5000/user/signup-verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          User_Name: username,
-          User_Email: email,
-          User_Password: password,
-          otp,
-        }),
-      });
 
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message);
+    try {
+      await signupUser_by_verify(username, email, password, otp);
       setOtp("");
       await loginUser(email, password);
       setShowOtp(false);
       navigate("/");
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      setError(error.message);
     }
-
     setloading(false);
   };
 
   const resendOtp = async () => {
+    setResending(true);
     try {
       setOtp("");
       await signupUser(username, email, password);
+      setResending(false);
     } catch (err) {
       setError(err.message);
     }
+    setResending(false);
   };
 
   const closingotp = () => {
@@ -130,6 +122,7 @@ export default function Signup({ stateReset }) {
             type="text"
             placeholder="Email Id"
             value={email}
+            autoComplete="email"
             onChange={(e) => setEmail(e.target.value)}
           />
           <div className="password">
@@ -137,6 +130,7 @@ export default function Signup({ stateReset }) {
               type={see}
               placeholder="Password"
               value={password}
+              autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
             />
             <button type="button" onClick={togglePassword}>
@@ -167,11 +161,6 @@ export default function Signup({ stateReset }) {
           <button>
             <span>
               <i className="fa-brands fa-github"></i>
-            </span>
-          </button>
-          <button>
-            <span>
-              <i className="fa-brands fa-facebook-f"></i>
             </span>
           </button>
         </div>
@@ -209,7 +198,7 @@ export default function Signup({ stateReset }) {
             </button>
 
             <button className="otp-resend-btn" onClick={resendOtp}>
-              Resend OTP
+              {resending ? "Resending OTP..." : "Resend OTP"}
             </button>
           </div>
         </div>

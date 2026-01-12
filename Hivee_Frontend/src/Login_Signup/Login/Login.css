@@ -117,10 +117,18 @@
 }
 
 .password input {
+  border: none;
+  font-size: 1rem;
+  color: gray;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   width: 100%;
+  height: 40px;
   padding: 12px 45px 12px 12px;
 }
-
+.password input:focus {
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
 .password button {
   position: absolute;
   right: 12px;
@@ -139,4 +147,176 @@
 
 .password button:hover i {
   color: gray;
+}
+.password-reset {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  backdrop-filter: blur(4px);
+}
+.password-box {
+  background: #f7ede0;
+  width: 420px;
+  padding: 2rem 0.5rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+  animation: scaleIn 0.25s ease-in-out;
+}
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.Email-verfiy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.title {
+  margin-right: 1rem;
+  margin-left: 3rem;
+}
+.title h2 {
+  font-size: 1.3rem;
+  color: #5e5b52;
+}
+.reset-error {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: gray;
+}
+.input-verify {
+  display: flex;
+  padding: 0 40px 0 40px;
+}
+.input-verify input {
+  width: 100%;
+  font-size: 1rem;
+  color: gray;
+  padding: 0 0 0 10px;
+  height: 40px;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.input-verify input:focus {
+  outline: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.email-button {
+  display: flex;
+  justify-content: center;
+  padding: 0 50px 0 50px;
+  height: 40px;
+}
+.email-button button {
+  color: white;
+  font-size: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  background-color: #ff8800;
+  border: none;
+  transition: 0.2s ease-in-out;
+}
+.email-button button:hover {
+  cursor: pointer;
+  background-color: #fcac5d;
+  color: gray;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+.email-button button:active {
+  cursor: pointer;
+  background-color: #ff8800;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.OTP-verify {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.otp-button {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px 0 50px;
+  height: 70px;
+}
+.verify {
+  color: white;
+  font-size: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  background-color: #ff8800;
+  border: none;
+  height: 100%;
+  transition: 0.2s ease-in-out;
+}
+.verify:hover {
+  cursor: pointer;
+  background-color: #fcac5d;
+  color: gray;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+.verify:active {
+  cursor: pointer;
+  background-color: #ff8800;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.Otp-verification {
+  display: flex;
+  padding: 0 40px 0 40px;
+}
+.password-reseting {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.password-reseting .title {
+  margin-right: 1rem;
+  margin-left: 2.2rem;
+}
+.password-reseting .title h2 {
+  font-size: 1rem;
+}
+.password-button {
+  display: flex;
+  justify-content: center;
+  padding: 0 50px 0 50px;
+  height: 40px;
+}
+.password-button button {
+  color: white;
+  font-size: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  background-color: #ff8800;
+  border: none;
+  transition: 0.2s ease-in-out;
+}
+.password-button button:hover {
+  cursor: pointer;
+  background-color: #fcac5d;
+  color: gray;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+.password-button button:active {
+  cursor: pointer;
+  background-color: #ff8800;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

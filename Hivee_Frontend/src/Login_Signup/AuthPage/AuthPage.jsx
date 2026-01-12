@@ -12,7 +12,7 @@ export default function AuthPage() {
     setMode(expanding);
     setTimeout(() => {
       setMode(targetMode);
-    }, 800);
+    }, 600);
   };
   return (
     <div className="Main">

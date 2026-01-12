@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import App from "./App";
 import Home from "./Components/Home/Home";
+import Profile from "./Components/Profile/Profile";
 import AuthPage from "./Login_Signup/AuthPage/AuthPage";
 import ProtectedRoute from "./Data_Management/Protected";
 
@@ -25,6 +26,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         ),
       },

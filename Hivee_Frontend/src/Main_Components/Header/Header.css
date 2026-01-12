@@ -1,0 +1,111 @@
+.logo h1 {
+  font-family: "Allura", cursive;
+  font-size: 3rem; /* slightly larger than normal */
+  font-weight: 1000; /* Allura has only one weight */
+  letter-spacing: 1px; /* very subtle */
+  color: black;
+}
+.logo {
+  text-align: center;
+  padding: 10px 0 0 0;
+}
+header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 240px;
+  background-color: #faedcd;
+  box-shadow: 0.5px 10px 10px rgba(0, 0, 0, 0.5);
+}
+nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+nav a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.setting {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+  gap: 20px;
+}
+
+.content ul li {
+  list-style: none;
+  margin-left: 2rem;
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  margin-right: 0.5rem;
+  border-radius: 10px;
+  padding: 5px 0px 5px 15px;
+}
+
+.content ul li svg {
+  fill: black;
+}
+
+.content ul li:hover {
+  background-color: #f9e4b5;
+  box-shadow: 0 0 20px rgba(249, 228, 181, 0.8);
+}
+
+.content ul li:hover svg,
+.content ul li:hover p {
+  fill: #d4a373;
+  color: #d4a373;
+}
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 5px 0px 5px 15px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: black;
+  transition: background-color 0.2s ease;
+}
+
+.nav-link svg {
+  fill: black;
+  transition: fill 0.2s ease;
+}
+
+.nav-link p {
+  font-weight: 400;
+  transition: font-weight 0.2s ease, color 0.2s ease;
+}
+
+/* ACTIVE */
+.nav-link.active {
+  background-color: #f9e4b5;
+}
+
+.nav-link.active svg {
+  fill: #d4a373;
+}
+
+.nav-link.active p {
+  font-weight: 700;
+  color: #d4a373;
+}
+
+/* HOVER */
+.nav-link:hover {
+  background-color: #f9e4b5;
+}
+
+.nav-link:hover svg,
+.nav-link:hover p {
+  fill: #d4a373;
+  color: #d4a373;
+}

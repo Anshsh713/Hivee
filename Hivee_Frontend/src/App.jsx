@@ -7,11 +7,17 @@ export default function App() {
   const location = useLocation();
   const hideLayout = location.pathname === "/authpage";
 
+  if (hideLayout) {
+    return <Outlet />;
+  }
+
   return (
-    <div className="App-box">
-      {!hideLayout && <Header />}
-      <Outlet />
-      {!hideLayout && <Footer />}
+    <div className="app-layout">
+      <Header />
+      <main className="main-content">
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   );
 }

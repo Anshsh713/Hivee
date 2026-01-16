@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "./Data_Management/Store";
 import { AuthProvider } from "./Context/UserContext";
+import { PostProvider } from "./Context/PostingContext";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -45,7 +46,9 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <PostProvider>
+          <RouterProvider router={router} />
+        </PostProvider>
       </AuthProvider>
     </Provider>
   </StrictMode>

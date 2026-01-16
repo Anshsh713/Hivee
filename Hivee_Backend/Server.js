@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const MongoDB_Connecting = require("./config/MongoDB_connect");
 const UserRoutes = require("./routes/UserRoutes");
+const PostRouter = require("./routes/PostRouter");
 
 const Hivee = express();
 
@@ -16,7 +17,7 @@ MongoDB_Connecting();
 
 // Routes
 Hivee.use("/user", UserRoutes);
-
+Hivee.use("/post", PostRouter);
 // 404 Handler
 Hivee.use((req, res) => {
   res.status(404).json({

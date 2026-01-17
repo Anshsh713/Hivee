@@ -305,6 +305,7 @@ input:checked + .slider::before {
   border-bottom-right-radius: 10px;
   overflow: hidden;
 }
+
 .aspect-controls {
   position: absolute;
   bottom: 1px;
@@ -471,6 +472,13 @@ input:checked + .slider::before {
   height: auto;
   object-fit: contain;
 }
+.final-image video {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
 .final-text {
   width: 50%;
   padding: 12px;
@@ -505,4 +513,32 @@ input:checked + .slider::before {
 
 .final-text::-webkit-scrollbar-track {
   background: transparent;
+}
+
+.video-crop-container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background: white;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  overflow: hidden;
+}
+
+/* VIDEO */
+.video-crop-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* GRID OVERLAY */
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.35) 1px, transparent 1px);
+  background-size: 33.33% 33.33%;
 }

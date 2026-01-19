@@ -5,6 +5,7 @@ export default function TextOnlyStep({
   setPagestate,
   making_post,
 
+  setCaption,
   caption,
   handleChange,
   Max_Lenght,

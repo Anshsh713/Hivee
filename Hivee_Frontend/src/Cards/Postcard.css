@@ -1,0 +1,165 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.card-main-box {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 4px;
+  border-radius: 10px;
+  padding: 10px 10px 10px 10px;
+  background-color: #fff;
+  border-bottom: 1px solid #dbdbdb;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+
+/* HEADER */
+.user-post-information {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+}
+
+.user-post-information i {
+  color: gray;
+}
+.user-post-information i:hover {
+  color: #262626;
+}
+.user-post-information i:active {
+  color: #8e8e8e;
+}
+.information {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile i {
+  font-size: 32px;
+  color: #8e8e8e;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.user i {
+  color: gray;
+  font-size: 0.2rem;
+}
+.user h1 {
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.user p {
+  font-size: 14px;
+  color: #8e8e8e;
+}
+
+.more i {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* POST IMAGE */
+.post {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 500px;
+  background-color: rgba(0, 0, 0, 1);
+}
+
+.post img,
+.post video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.tags {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 6px;
+  border-radius: 50%;
+}
+
+.tags i {
+  color: #fff;
+  font-size: 12px;
+}
+
+/* INTERACTION BAR */
+.interaction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+}
+
+.like-comment-shar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.like-comment-shar i {
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.like-comment-shar i:hover {
+  transform: scale(1.05);
+}
+
+.like-comment-shar p {
+  font-size: 14px;
+}
+
+.save i {
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.save i:hover {
+  transform: scale(1.05);
+}
+/* CAPTION */
+.comment-user {
+  padding: 0 12px 12px;
+  font-size: 14px;
+  display: flex;
+}
+
+.comment-user p:first-child {
+  cursor: pointer;
+  font-weight: 600;
+  display: inline;
+  margin-right: 6px;
+}
+
+.comment-user p:last-child {
+  color: #262626;
+}
+.click {
+  cursor: pointer;
+}

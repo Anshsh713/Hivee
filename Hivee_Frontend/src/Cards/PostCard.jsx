@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import { usePost } from "../Context/PostingContext";
 import "./Postcard.css";
-import { createNextState } from "@reduxjs/toolkit";
 
 export default function PostCard({ post }) {
   const {
+    _id,
     Caption,
     mediaURL,
     Post_Type,
@@ -11,9 +12,13 @@ export default function PostCard({ post }) {
     commentsCount,
     createdAt,
     User,
+    isLikedByMe = false,
   } = post;
 
   const videoRef = useRef(null);
+  const { toggleLike } = usePost();
+  const [muted, setMuted] = useState(true);
+  const CAPTION_WORD_LIMIT = 5;
 
   const getTimeAgo = (date) => {
     const diff = Math.floor((new Date() - new Date(date)) / (1000 * 60 * 60));
@@ -26,29 +31,63 @@ export default function PostCard({ post }) {
   useEffect(() => {
     if (Post_Type !== "Video" || !videoRef.current) return;
 
+    const video = videoRef.current;
+
+    const playIfVisible = () => {
+      const rect = video.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+
+      const visibleHeight = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+      const visibilityRatio = visibleHeight / rect.height;
+
+      if (visibilityRatio >= 0.6) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    };
+
+    playIfVisible();
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
-          videoRef.current.play();
-          videoRef.current.muted = false;
+        if (entry.intersectionRatio >= 0.6) {
+          if (video.paused) {
+            video.play().catch(() => {});
+          }
         } else {
-          videoRef.current.pause();
-          videoRef.current.muted = true;
+          if (!video.paused) {
+            video.pause();
+          }
         }
       },
       { threshold: [0.6] },
     );
 
-    observer.observe(videoRef.current);
+    observer.observe(video);
 
     return () => observer.disconnect();
-  }, [Post_Type]);
+  }, [Post_Type, muted]);
+
+  const togglemute = () => {
+    if (!videoRef.current) return;
+    const newMuted = !muted;
+    videoRef.current.muted = newMuted;
+    setMuted(newMuted);
+  };
 
   const like_comment_format = (value) => {
     if (value < 1000) return `${value}`;
     if (value < 1000000) return `${(value / 1000).toFixed(1)} K`;
     if (value < 1000000000) return `${(value / 1000000).toFixed(1)} M`;
-    return `${(num / 1_000_000_000).toFixed(1)}B`;
+    return `${(value / 1_000_000_000).toFixed(1)}B`;
+  };
+
+  const limitCaption = (text, limit = CAPTION_WORD_LIMIT) => {
+    if (!text) return;
+
+    const words = text.trim().split(/\s+/);
+    return words.slice(0, limit).join(" ");
   };
 
   return (
@@ -71,22 +110,30 @@ export default function PostCard({ post }) {
       <div className="post">
         {Post_Type === "Image" && <img src={mediaURL} alt="post" />}
         {Post_Type === "Video" && (
-          <video
-            ref={videoRef}
-            src={mediaURL}
-            alt="post"
-            loop
-            muted
-            playsInline
-          />
+          <video ref={videoRef} src={mediaURL} alt="post" loop playsInline />
         )}
-        <div className="tags">
+        <div className="tag-users">
           <i className="fa-solid fa-user"></i>
         </div>
+        {Post_Type === "Video" && (
+          <div className="mute-toggle" onClick={togglemute}>
+            <i
+              className={
+                muted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high"
+              }
+            ></i>
+          </div>
+        )}
       </div>
       <div className="interaction">
         <div className="like-comment-shar">
-          <i className="fa-regular fa-heart"></i>
+          <i
+            className={
+              isLikedByMe ? "fa-solid fa-heart liked" : "fa-regular fa-heart"
+            }
+            onClick={() => toggleLike(_id)}
+          ></i>
+
           <p>{like_comment_format(likesCount)}</p>
           <i className="fa-regular fa-comment fa-flip-horizontal"></i>
           <p>{like_comment_format(commentsCount)}</p>
@@ -99,8 +146,8 @@ export default function PostCard({ post }) {
       {Caption && (
         <div className="comment-user">
           <p>{User?.User_Name}</p>
-          <p>{Caption}... </p>
-          <p className="click">more</p>
+          <p>{limitCaption(Caption)} ... </p>
+          <p className="click"> more</p>
         </div>
       )}
     </div>

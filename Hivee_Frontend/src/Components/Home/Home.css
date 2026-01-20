@@ -1,0 +1,8 @@
+.Home-Page {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  background-color: #fffaef;
+}

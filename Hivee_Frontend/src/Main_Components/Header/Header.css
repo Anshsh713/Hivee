@@ -14,7 +14,7 @@ header {
   left: 0;
   top: 0;
   height: 100vh;
-  width: 240px;
+  width: 250px;
   background-color: #faedcd;
   box-shadow: 0.5px 10px 10px rgba(0, 0, 0, 0.5);
 }
@@ -82,7 +82,9 @@ nav a {
 
 .nav-link p {
   font-weight: 400;
-  transition: font-weight 0.2s ease, color 0.2s ease;
+  transition:
+    font-weight 0.2s ease,
+    color 0.2s ease;
 }
 
 /* ACTIVE */

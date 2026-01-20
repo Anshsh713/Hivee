@@ -1,4 +1,5 @@
 const Hivee_Post = require("../models/Post");
+const Hivee_Post_Likes = require("../models/PostLikes");
 
 exports.Making_Post = async (req, res) => {
   try {
@@ -99,6 +100,31 @@ exports.getHomeFeed = async (req, res) => {
           },
         },
       },
+      {
+        $lookup: {
+          from: "hivee_post_likes",
+          let: { postId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$PostID", "$$postId"] },
+                    { $eq: ["$UserID", mongoose.Types.ObjectId(req.user._id)] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "myLike",
+        },
+      },
+      {
+        $addFields: {
+          isLikedByMe: { $gt: [{ $size: "$myLike" }, 0] },
+        },
+      },
+
       { $sort: { feedScore: -1 } },
       { $skip: skip },
       { $limit: limit },
@@ -122,6 +148,7 @@ exports.getHomeFeed = async (req, res) => {
           commentsCount: 1,
           createdAt: 1,
           hideLikesCount: 1,
+          isLikedByMe: 1,
           "User._id": 1,
           "User.User_Name": 1,
         },
@@ -139,6 +166,64 @@ exports.getHomeFeed = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to load feed",
+    });
+  }
+};
+
+exports.PostLikes = async (req, res) => {
+  try {
+    const { PostID } = req.params;
+
+    const post = await Hivee_Post.findById(PostID);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not Found",
+      });
+    }
+
+    const existingLike = await Hivee_Post_Likes.findOne({
+      UserID: req.user._id,
+      PostID,
+    });
+
+    if (existingLike) {
+      await Hivee_Post_Likes.deleteOne({ _id: existingLike._id });
+
+      await Hivee_Post.findByIdAndUpdate(PostID, {
+        $inc: { likesCount: -1 },
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Post unliked",
+      });
+    }
+
+    await Hivee_Post_Likes.create({ UserID: req.user._id, PostID });
+
+    await Hivee_Post.findByIdAndUpdate(PostID, {
+      $inc: { likesCount: 1 },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Post liked",
+    });
+  } catch (error) {
+    console.error("LIKE ERROR:", error);
+
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "Post already liked",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Like operation failed",
     });
   }
 };

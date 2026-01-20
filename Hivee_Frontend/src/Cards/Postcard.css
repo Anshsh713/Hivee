@@ -10,6 +10,7 @@
   margin: 0 auto 4px;
   border-radius: 10px;
   padding: 10px 10px 10px 10px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.9);
   background-color: #fff;
   border-bottom: 1px solid #dbdbdb;
   font-family:
@@ -92,19 +93,44 @@
   height: 100%;
   object-fit: contain;
 }
-
-.tags {
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 6px;
-  border-radius: 50%;
+.liked {
+  color: #ed4956; /* Instagram red */
 }
 
-.tags i {
+/* Tagged users */
+.tag-users {
+  position: absolute;
+  bottom: 12px;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  left: 12px;
+  background-color: rgba(0, 0, 0, 0.76);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.tag-users i {
   color: #fff;
-  font-size: 12px;
+  font-size: 10px;
+}
+
+/* Mute toggle */
+.mute-toggle {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background-color: rgba(0, 0, 0, 0.76);
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.mute-toggle i {
+  color: #fff;
+  font-size: 14px;
 }
 
 /* INTERACTION BAR */
@@ -124,11 +150,11 @@
 .like-comment-shar i {
   font-size: 22px;
   cursor: pointer;
-  transition: 0.2s;
+  transition: transform 0.4s ease;
 }
 
 .like-comment-shar i:hover {
-  transform: scale(1.05);
+  transform: rotateY(180deg);
 }
 
 .like-comment-shar p {
@@ -141,7 +167,7 @@
   transition: 0.2s;
 }
 .save i:hover {
-  transform: scale(1.05);
+  transform: rotateY(180deg);
 }
 /* CAPTION */
 .comment-user {

@@ -77,9 +77,56 @@ export const PostProvider = ({ children }) => {
     }
   };
 
+  const toggleLike = async (postId) => {
+    if (!token) return;
+
+    setFeed((prev) =>
+      prev.map((post) =>
+        post._id === postId
+          ? {
+              ...post,
+              isLikedByMe: !post.isLikedByMe,
+              likesCount: post.isLikedByMe
+                ? post.likesCount - 1
+                : post.likesCount + 1,
+            }
+          : post,
+      ),
+    );
+
+    try {
+      const res = await fetch(`http://localhost:5000/post/${postId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error("Like failed");
+      }
+    } catch (error) {
+      setFeed((prev) =>
+        prev.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                isLikedByMe: !post.isLikedByMe,
+                likesCount: post.isLikedByMe
+                  ? post.likesCount + 1
+                  : post.likesCount - 1,
+              }
+            : post,
+        ),
+      );
+    }
+  };
+
   return (
     <PostContext.Provider
-      value={{ feed, fetchfeed, MakingPost, loading, hasMore }}
+      value={{ toggleLike, feed, fetchfeed, MakingPost, loading, hasMore }}
     >
       {children}
     </PostContext.Provider>

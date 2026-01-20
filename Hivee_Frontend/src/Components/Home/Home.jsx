@@ -1,6 +1,7 @@
 import React from "react";
 import PostCard from "../../Cards/PostCard";
 import "../../Cards/PostCard.css";
+import "./Home.css";
 import { usePost } from "../../Context/PostingContext";
 
 export default function Home() {

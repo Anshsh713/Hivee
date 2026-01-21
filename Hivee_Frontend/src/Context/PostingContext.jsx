@@ -95,7 +95,7 @@ export const PostProvider = ({ children }) => {
     );
 
     try {
-      const res = await fetch(`http://localhost:5000/post/${postId}`, {
+      const res = await fetch(`http://localhost:5000/post/likes/${postId}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -124,9 +124,64 @@ export const PostProvider = ({ children }) => {
     }
   };
 
+  const toggleSaved = async (postId) => {
+    if (!token) return;
+
+    setFeed((prev) =>
+      prev.map((post) =>
+        post._id === postId
+          ? {
+              ...post,
+              isSavedByMe: !post.isSavedByMe,
+              SavedCount: post.isSavedByMe
+                ? post.SavedCount - 1
+                : post.SavedCount + 1,
+            }
+          : post,
+      ),
+    );
+
+    try {
+      const res = await fetch(`http://localhost:5000/post/saves/${postId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error("Save failed");
+      }
+    } catch (error) {
+      setFeed((prev) =>
+        prev.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                isSavedByMe: !post.isSavedByMe,
+                SavedCount: post.isSavedByMe
+                  ? post.SavedCount - 1
+                  : post.SavedCount + 1,
+              }
+            : post,
+        ),
+      );
+    }
+  };
+
   return (
     <PostContext.Provider
-      value={{ toggleLike, feed, fetchfeed, MakingPost, loading, hasMore }}
+      value={{
+        toggleSaved,
+        toggleLike,
+        feed,
+        fetchfeed,
+        MakingPost,
+        loading,
+        hasMore,
+      }}
     >
       {children}
     </PostContext.Provider>

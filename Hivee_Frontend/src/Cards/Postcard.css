@@ -96,7 +96,9 @@
 .liked {
   color: #ed4956; /* Instagram red */
 }
-
+.Saved {
+  color: #262626;
+}
 /* Tagged users */
 .tag-users {
   position: absolute;

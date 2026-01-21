@@ -1,5 +1,7 @@
 const Hivee_Post = require("../models/Post");
+const mongoose = require("mongoose");
 const Hivee_Post_Likes = require("../models/PostLikes");
+const Hivee_Post_Saves = require("../models/PostSaved");
 
 exports.Making_Post = async (req, res) => {
   try {
@@ -110,7 +112,12 @@ exports.getHomeFeed = async (req, res) => {
                 $expr: {
                   $and: [
                     { $eq: ["$PostID", "$$postId"] },
-                    { $eq: ["$UserID", mongoose.Types.ObjectId(req.user._id)] },
+                    {
+                      $eq: [
+                        "$UserID",
+                        new mongoose.Types.ObjectId(req.user._id),
+                      ],
+                    },
                   ],
                 },
               },
@@ -120,11 +127,39 @@ exports.getHomeFeed = async (req, res) => {
         },
       },
       {
+        $lookup: {
+          from: "hivee_post_saves",
+          let: { postId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$PostID", "$$postId"] },
+                    {
+                      $eq: [
+                        "$UserID",
+                        new mongoose.Types.ObjectId(req.user._id),
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "mySaves",
+        },
+      },
+      {
         $addFields: {
           isLikedByMe: { $gt: [{ $size: "$myLike" }, 0] },
         },
       },
-
+      {
+        $addFields: {
+          isSavedByMe: { $gt: [{ $size: "$mySaves" }, 0] },
+        },
+      },
       { $sort: { feedScore: -1 } },
       { $skip: skip },
       { $limit: limit },
@@ -146,9 +181,11 @@ exports.getHomeFeed = async (req, res) => {
           Post_Type: 1,
           likesCount: 1,
           commentsCount: 1,
+          SavedCount: 1,
           createdAt: 1,
           hideLikesCount: 1,
           isLikedByMe: 1,
+          isSavedByMe: 1,
           "User._id": 1,
           "User.User_Name": 1,
         },
@@ -224,6 +261,64 @@ exports.PostLikes = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Like operation failed",
+    });
+  }
+};
+
+exports.PostSaved = async (req, res) => {
+  try {
+    const { PostID } = req.params;
+
+    const post = await Hivee_Post.findById(PostID);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    const existingSaved = await Hivee_Post_Saves.findOne({
+      UserID: req.user._id,
+      PostID,
+    });
+
+    if (existingSaved) {
+      await Hivee_Post_Saves.deleteOne({ _id: existingSaved._id });
+
+      await Hivee_Post_Saves.findByIdAndUpdate(PostID, {
+        $inc: { SavedCount: -1 },
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "Post Unsaved",
+      });
+    }
+
+    await Hivee_Post_Saves.create({ UserID: req.user._id, PostID });
+
+    await Hivee_Post_Saves.findByIdAndUpdate(PostID, {
+      $inc: { SavedCount: 1 },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Post Saved",
+    });
+  } catch (error) {
+    console.error("Saved Error : ", error);
+
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "Post already Saved",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Saved operation failed",
     });
   }
 };

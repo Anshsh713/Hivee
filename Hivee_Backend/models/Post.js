@@ -43,6 +43,11 @@ const Hivee_Posting = new mongoose.Schema(
       default: 0,
     },
 
+    SavedCount: {
+      type: Number,
+      default: 0,
+    },
+
     hideLikesCount: {
       type: Boolean,
       default: false,
@@ -58,7 +63,7 @@ const Hivee_Posting = new mongoose.Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 module.exports = mongoose.model("Hivee_Post", Hivee_Posting);

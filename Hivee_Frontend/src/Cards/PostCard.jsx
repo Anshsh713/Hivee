@@ -13,10 +13,11 @@ export default function PostCard({ post }) {
     createdAt,
     User,
     isLikedByMe = false,
+    isSavedByMe = false,
   } = post;
 
   const videoRef = useRef(null);
-  const { toggleLike } = usePost();
+  const { toggleLike, toggleSaved } = usePost();
   const [muted, setMuted] = useState(true);
   const CAPTION_WORD_LIMIT = 5;
 
@@ -33,7 +34,24 @@ export default function PostCard({ post }) {
 
     const video = videoRef.current;
 
-    const playIfVisible = () => {
+    // ✅ MUST be muted before autoplay
+    video.muted = true;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.intersectionRatio >= 0.6) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: [0.6] },
+    );
+
+    observer.observe(video);
+
+    // ✅ IMPORTANT: force check once after mount
+    setTimeout(() => {
       const rect = video.getBoundingClientRect();
       const vh = window.innerHeight || document.documentElement.clientHeight;
 
@@ -42,32 +60,11 @@ export default function PostCard({ post }) {
 
       if (visibilityRatio >= 0.6) {
         video.play().catch(() => {});
-      } else {
-        video.pause();
       }
-    };
-
-    playIfVisible();
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.intersectionRatio >= 0.6) {
-          if (video.paused) {
-            video.play().catch(() => {});
-          }
-        } else {
-          if (!video.paused) {
-            video.pause();
-          }
-        }
-      },
-      { threshold: [0.6] },
-    );
-
-    observer.observe(video);
+    }, 100);
 
     return () => observer.disconnect();
-  }, [Post_Type, muted]);
+  }, [Post_Type]);
 
   const togglemute = () => {
     if (!videoRef.current) return;
@@ -77,6 +74,7 @@ export default function PostCard({ post }) {
   };
 
   const like_comment_format = (value) => {
+    if (value === 0) return `${""}`;
     if (value < 1000) return `${value}`;
     if (value < 1000000) return `${(value / 1000).toFixed(1)} K`;
     if (value < 1000000000) return `${(value / 1000000).toFixed(1)} M`;
@@ -85,7 +83,6 @@ export default function PostCard({ post }) {
 
   const limitCaption = (text, limit = CAPTION_WORD_LIMIT) => {
     if (!text) return;
-
     const words = text.trim().split(/\s+/);
     return words.slice(0, limit).join(" ");
   };
@@ -140,7 +137,14 @@ export default function PostCard({ post }) {
           <i className="fa-regular fa-paper-plane"></i>
         </div>
         <div className="save">
-          <i className="fa-regular fa-bookmark"></i>
+          <i
+            className={
+              isSavedByMe
+                ? "fa-solid fa-bookmark Saved"
+                : "fa-regular fa-bookmark"
+            }
+            onClick={() => toggleSaved(_id)}
+          ></i>
         </div>
       </div>
       {Caption && (

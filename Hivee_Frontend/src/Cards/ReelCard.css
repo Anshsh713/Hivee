@@ -1,0 +1,115 @@
+.reels {
+  position: relative;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  height: 95vh;
+  width: 50%;
+  margin-left: 350px;
+  background-color: white;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: row;
+}
+.reel-section {
+  position: relative;
+  display: flex;
+  border-radius: 10px;
+  flex-direction: column;
+  background-color: black;
+  width: 80%;
+  height: 100%;
+}
+
+.reel-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.reel-mute {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: white;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.reel-actions {
+  right: 60px;
+  bottom: 20px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  color: black;
+}
+
+.reel-actions .action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reel-actions i {
+  font-size: 22px;
+  cursor: pointer;
+  transition: transform 0.4s ease;
+}
+
+.reel-actions i:hover {
+  transform: rotateY(180deg);
+}
+
+.reel-actions p {
+  font-size: 14px;
+}
+
+.liked {
+  color: red;
+}
+
+.Saved {
+  color: black;
+}
+
+.reel-info {
+  position: absolute;
+  bottom: 35px;
+  left: 15px;
+  color: white;
+  max-width: 70%;
+  z-index: 5;
+}
+
+.reel-user {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.reel-user button {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.reel-caption {
+  margin-top: 8px;
+  font-size: 14px;
+}

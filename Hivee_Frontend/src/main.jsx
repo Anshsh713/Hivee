@@ -13,6 +13,7 @@ import App from "./App";
 import Home from "./Components/Home/Home";
 import Profile from "./Components/Profile/Profile";
 import Thoughts from "./Components/Thoughts/Thoughts";
+import Reels from "./Components/Reels/Reels";
 import AuthPage from "./Login_Signup/AuthPage/AuthPage";
 import ProtectedRoute from "./Data_Management/Protected";
 
@@ -44,6 +45,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Thoughts />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "reels",
+        element: (
+          <ProtectedRoute>
+            <Reels />
           </ProtectedRoute>
         ),
       },

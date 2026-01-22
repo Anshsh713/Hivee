@@ -17,8 +17,7 @@ export default function PostCard({ post }) {
   } = post;
 
   const videoRef = useRef(null);
-  const { toggleLike, toggleSaved } = usePost();
-  const [muted, setMuted] = useState(true);
+  const { toggleLike, toggleSaved, postMuted, setPostMuted } = usePost();
   const CAPTION_WORD_LIMIT = 5;
 
   const getTimeAgo = (date) => {
@@ -34,8 +33,7 @@ export default function PostCard({ post }) {
 
     const video = videoRef.current;
 
-    // ✅ MUST be muted before autoplay
-    video.muted = true;
+    video.muted = postMuted;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -50,7 +48,6 @@ export default function PostCard({ post }) {
 
     observer.observe(video);
 
-    // ✅ IMPORTANT: force check once after mount
     setTimeout(() => {
       const rect = video.getBoundingClientRect();
       const vh = window.innerHeight || document.documentElement.clientHeight;
@@ -64,13 +61,13 @@ export default function PostCard({ post }) {
     }, 100);
 
     return () => observer.disconnect();
-  }, [Post_Type]);
+  }, [Post_Type, postMuted]);
 
   const togglemute = () => {
     if (!videoRef.current) return;
-    const newMuted = !muted;
+    const newMuted = !postMuted;
     videoRef.current.muted = newMuted;
-    setMuted(newMuted);
+    setPostMuted(newMuted);
   };
 
   const like_comment_format = (value) => {
@@ -116,7 +113,9 @@ export default function PostCard({ post }) {
           <div className="mute-toggle" onClick={togglemute}>
             <i
               className={
-                muted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high"
+                postMuted
+                  ? "fa-solid fa-volume-xmark"
+                  : "fa-solid fa-volume-high"
               }
             ></i>
           </div>

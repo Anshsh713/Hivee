@@ -350,6 +350,149 @@ exports.getThoughtsFeed = async (req, res) => {
   }
 };
 
+exports.getReelsFeed = async (req, res) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    const feed = await Hivee_Post.aggregate([
+      {
+        $match: {
+          isDeleted: false,
+          Post_Type: { $in: ["Video"] },
+        },
+      },
+      {
+        $addFields: {
+          recencyScore: {
+            $divide: [
+              { $subtract: [new Date(), "$createdAt"] },
+              1000 * 60 * 60,
+            ],
+          },
+        },
+      },
+      {
+        $addFields: {
+          feedScore: {
+            $subtract: [
+              {
+                $add: [
+                  { $multiply: ["$likesCount", 2] },
+                  { $multiply: ["$commentsCount", 3] },
+                ],
+              },
+              "$recencyScore",
+            ],
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "hivee_post_likes",
+          let: { postId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$PostID", "$$postId"] },
+                    {
+                      $eq: [
+                        "$UserID",
+                        new mongoose.Types.ObjectId(req.user._id),
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "myLike",
+        },
+      },
+      {
+        $lookup: {
+          from: "hivee_post_saves",
+          let: { postId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$PostID", "$$postId"] },
+                    {
+                      $eq: [
+                        "$UserID",
+                        new mongoose.Types.ObjectId(req.user._id),
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "mySaves",
+        },
+      },
+      {
+        $addFields: {
+          isLikedByMe: { $gt: [{ $size: "$myLike" }, 0] },
+        },
+      },
+      {
+        $addFields: {
+          isSavedByMe: { $gt: [{ $size: "$mySaves" }, 0] },
+        },
+      },
+      { $sort: { feedScore: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+      {
+        $lookup: {
+          from: "hivee_users",
+          localField: "UserID",
+          foreignField: "_id",
+          as: "User",
+        },
+      },
+      {
+        $unwind: "$User",
+      },
+      {
+        $project: {
+          Caption: 1,
+          mediaURL: 1,
+          Post_Type: 1,
+          likesCount: 1,
+          commentsCount: 1,
+          SavedCount: 1,
+          createdAt: 1,
+          hideLikesCount: 1,
+          isLikedByMe: 1,
+          isSavedByMe: 1,
+          "User._id": 1,
+          "User.User_Name": 1,
+        },
+      },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      page,
+      posts: feed,
+      hasMore: feed.length === limit,
+    });
+  } catch (error) {
+    console.error("FEED ERROR:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to load feed",
+    });
+  }
+};
+
 exports.PostLikes = async (req, res) => {
   try {
     const { PostID } = req.params;

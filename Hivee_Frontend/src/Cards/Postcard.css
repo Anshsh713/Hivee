@@ -9,8 +9,8 @@
   max-width: 500px;
   margin: 0 auto 4px;
   padding: 10px 10px 10px 10px;
-  background-color: #fff;
-  border-bottom: 1px solid #dbdbdb;
+  background-color: #fffefb;
+  border-bottom: 1px solid #b6b6b6;
   font-family:
     system-ui,
     -apple-system,
@@ -99,6 +99,9 @@
 }
 /* Tagged users */
 .tag-users {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   bottom: 12px;
   width: 25px;
@@ -196,8 +199,8 @@
   max-width: 600px;
   margin: 0 auto 4px;
   padding: 10px 10px 10px 10px;
-  background-color: #fff;
-  border-bottom: 1px solid #dbdbdb;
+  background-color: #fffefb;
+  border-bottom: 1px solid #b6b6b6;
   font-family:
     system-ui,
     -apple-system,

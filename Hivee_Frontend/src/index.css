@@ -29,12 +29,7 @@ body {
 header {
   flex-shrink: 0;
 }
-.main-content {
-  flex: 1; /* takes remaining space */
-  overflow-y: auto; /* page scrolls here */
-  padding: 16px;
-  margin-left: 240px;
-}
+
 footer {
   width: 200px;
   flex-shrink: 0;

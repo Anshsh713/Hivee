@@ -128,7 +128,7 @@ export default function PostCard({ post }) {
             className={
               isLikedByMe ? "fa-solid fa-heart liked" : "fa-regular fa-heart"
             }
-            onClick={() => toggleLike(_id)}
+            onClick={() => toggleLike(_id, "post")}
           ></i>
 
           <p>{like_comment_format(likesCount)}</p>
@@ -143,7 +143,7 @@ export default function PostCard({ post }) {
                 ? "fa-solid fa-bookmark Saved"
                 : "fa-regular fa-bookmark"
             }
-            onClick={() => toggleSaved(_id)}
+            onClick={() => toggleSaved(_id, "post")}
           ></i>
         </div>
       </div>

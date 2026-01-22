@@ -8,11 +8,16 @@ export const PostProvider = ({ children }) => {
   const { token, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [feed, setFeed] = useState([]);
+  const [feedThoughts, setFeedThoughts] = useState([]);
   const [page, setPage] = useState(1);
+  const [thoughtsPage, setThoughtsPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    if (token) fetchfeed(1);
+    if (token) {
+      fetchfeed(1);
+      fetchfeedThoughts(1);
+    }
   }, [token]);
 
   const fetchfeed = async (pageNumber = 1) => {
@@ -48,6 +53,38 @@ export const PostProvider = ({ children }) => {
     }
   };
 
+  const fetchfeedThoughts = async (pageNumber = 1) => {
+    if (!token) return;
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `http://localhost:5000/post/thoughts-feed?page=${pageNumber}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+
+      setFeedThoughts((prev) =>
+        pageNumber === 1 ? data.posts : [...prev, ...data.posts],
+      );
+      setHasMore(data.hasMore);
+      setThoughtsPage(pageNumber);
+    } catch (error) {
+      console.error("FEED ERROR : ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const MakingPost = async (postData, isMultipart = false) => {
     if (!isAuthenticated) {
       throw new Error("User not Authenticated");
@@ -77,22 +114,40 @@ export const PostProvider = ({ children }) => {
     }
   };
 
-  const toggleLike = async (postId) => {
+  const toggleLike = async (postId, type) => {
     if (!token) return;
 
-    setFeed((prev) =>
-      prev.map((post) =>
-        post._id === postId
-          ? {
-              ...post,
-              isLikedByMe: !post.isLikedByMe,
-              likesCount: post.isLikedByMe
-                ? post.likesCount - 1
-                : post.likesCount + 1,
-            }
-          : post,
-      ),
-    );
+    if (type === "post") {
+      setFeed((prev) =>
+        prev.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                isLikedByMe: !post.isLikedByMe,
+                likesCount: post.isLikedByMe
+                  ? post.likesCount - 1
+                  : post.likesCount + 1,
+              }
+            : post,
+        ),
+      );
+    } else if (type === "text") {
+      setFeedThoughts((prev) =>
+        prev.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                isLikedByMe: !post.isLikedByMe,
+                likesCount: post.isLikedByMe
+                  ? post.likesCount - 1
+                  : post.likesCount + 1,
+              }
+            : post,
+        ),
+      );
+    } else {
+      return;
+    }
 
     try {
       const res = await fetch(`http://localhost:5000/post/likes/${postId}`, {
@@ -108,38 +163,74 @@ export const PostProvider = ({ children }) => {
         throw new Error("Like failed");
       }
     } catch (error) {
+      if (type === "post") {
+        setFeed((prev) =>
+          prev.map((post) =>
+            post._id === postId
+              ? {
+                  ...post,
+                  isLikedByMe: !post.isLikedByMe,
+                  likesCount: post.isLikedByMe
+                    ? post.likesCount - 1
+                    : post.likesCount + 1,
+                }
+              : post,
+          ),
+        );
+      } else if (type === "text") {
+        setFeedThoughts((prev) =>
+          prev.map((post) =>
+            post._id === postId
+              ? {
+                  ...post,
+                  isLikedByMe: !post.isLikedByMe,
+                  likesCount: post.isLikedByMe
+                    ? post.likesCount - 1
+                    : post.likesCount + 1,
+                }
+              : post,
+          ),
+        );
+      } else {
+        return;
+      }
+    }
+  };
+
+  const toggleSaved = async (postId, type) => {
+    if (!token) return;
+
+    if (type === "post") {
       setFeed((prev) =>
         prev.map((post) =>
           post._id === postId
             ? {
                 ...post,
-                isLikedByMe: !post.isLikedByMe,
-                likesCount: post.isLikedByMe
-                  ? post.likesCount + 1
-                  : post.likesCount - 1,
+                isSavedByMe: !post.isSavedByMe,
+                SavedCount: post.isSavedByMe
+                  ? post.SavedCount - 1
+                  : post.SavedCount + 1,
               }
             : post,
         ),
       );
+    } else if (type === "text") {
+      setFeedThoughts((prev) =>
+        prev.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                isSavedByMe: !post.isSavedByMe,
+                SavedCount: post.isSavedByMe
+                  ? post.SavedCount - 1
+                  : post.SavedCount + 1,
+              }
+            : post,
+        ),
+      );
+    } else {
+      return;
     }
-  };
-
-  const toggleSaved = async (postId) => {
-    if (!token) return;
-
-    setFeed((prev) =>
-      prev.map((post) =>
-        post._id === postId
-          ? {
-              ...post,
-              isSavedByMe: !post.isSavedByMe,
-              SavedCount: post.isSavedByMe
-                ? post.SavedCount - 1
-                : post.SavedCount + 1,
-            }
-          : post,
-      ),
-    );
 
     try {
       const res = await fetch(`http://localhost:5000/post/saves/${postId}`, {
@@ -155,25 +246,45 @@ export const PostProvider = ({ children }) => {
         throw new Error("Save failed");
       }
     } catch (error) {
-      setFeed((prev) =>
-        prev.map((post) =>
-          post._id === postId
-            ? {
-                ...post,
-                isSavedByMe: !post.isSavedByMe,
-                SavedCount: post.isSavedByMe
-                  ? post.SavedCount - 1
-                  : post.SavedCount + 1,
-              }
-            : post,
-        ),
-      );
+      if (type === "post") {
+        setFeed((prev) =>
+          prev.map((post) =>
+            post._id === postId
+              ? {
+                  ...post,
+                  isSavedByMe: !post.isSavedByMe,
+                  SavedCount: post.isSavedByMe
+                    ? post.SavedCount - 1
+                    : post.SavedCount + 1,
+                }
+              : post,
+          ),
+        );
+      } else if (type === "text") {
+        setFeedThoughts((prev) =>
+          prev.map((post) =>
+            post._id === postId
+              ? {
+                  ...post,
+                  isSavedByMe: !post.isSavedByMe,
+                  SavedCount: post.isSavedByMe
+                    ? post.SavedCount - 1
+                    : post.SavedCount + 1,
+                }
+              : post,
+          ),
+        );
+      } else {
+        return;
+      }
     }
   };
 
   return (
     <PostContext.Provider
       value={{
+        feedThoughts,
+        fetchfeedThoughts,
         toggleSaved,
         toggleLike,
         feed,

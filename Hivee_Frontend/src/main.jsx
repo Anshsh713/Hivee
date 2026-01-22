@@ -12,6 +12,7 @@ import {
 import App from "./App";
 import Home from "./Components/Home/Home";
 import Profile from "./Components/Profile/Profile";
+import Thoughts from "./Components/Thoughts/Thoughts";
 import AuthPage from "./Login_Signup/AuthPage/AuthPage";
 import ProtectedRoute from "./Data_Management/Protected";
 
@@ -38,6 +39,14 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "thoughts",
+        element: (
+          <ProtectedRoute>
+            <Thoughts />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);
@@ -51,5 +60,5 @@ createRoot(document.getElementById("root")).render(
         </PostProvider>
       </AuthProvider>
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );

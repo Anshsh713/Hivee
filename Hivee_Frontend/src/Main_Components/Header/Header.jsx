@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import "./Header.css";
 import Creating from "../../Components/Create/Create";
 export default function Header() {
   const [makingpost, setMakingpost] = useState(false);
+  const location = useLocation();
+  const isOtherPage =
+    location.pathname === "/profile" || location.pathname === "/reels";
   const icon = {
     xmlns: "http://www.w3.org/2000/svg",
     height: "30px",
@@ -12,10 +15,10 @@ export default function Header() {
   };
   return (
     <>
-      <header>
+      <header className={isOtherPage ? "other-page" : ""}>
         <nav>
           <div className="logo">
-            <h1>Hivee</h1>
+            <h1>{isOtherPage ? "H" : "Hivee"}</h1>
           </div>
           <div className="content">
             <ul>

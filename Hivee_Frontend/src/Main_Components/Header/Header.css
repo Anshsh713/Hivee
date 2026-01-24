@@ -19,6 +19,38 @@ header {
   box-shadow: 0.5px 10px 1px rgba(0, 0, 0, 0.5);
 }
 
+.other-page {
+  width: 80px;
+}
+
+.other-page .nav-link p {
+  display: none;
+}
+
+.other-page nav a {
+  justify-content: center;
+  padding: 4px;
+}
+
+.other-page .content ul li {
+  margin-left: 0.5rem;
+  padding: 0px 0px 5px 1px;
+}
+
+.other-page .create-btn {
+  justify-content: center;
+  padding: 4px;
+}
+
+.other-page .setting {
+  justify-content: center;
+  font-size: 0;
+}
+
+.other-page .setting svg {
+  font-size: initial;
+}
+
 nav {
   display: flex;
   flex-direction: column;

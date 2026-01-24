@@ -6,6 +6,7 @@ const {
   PostSaved,
   getThoughtsFeed,
   getReelsFeed,
+  getUserAllPosts,
 } = require("../controllers/PostControllers");
 const { protect } = require("../middleware/Protection");
 const upload = require("../middleware/upload");
@@ -17,5 +18,6 @@ router.get("/thoughts-feed", protect, getThoughtsFeed);
 router.get("/reels-feed", protect, getReelsFeed);
 router.post("/likes/:PostID", protect, PostLikes);
 router.post("/saves/:PostID", protect, PostSaved);
+router.get("/user/:userId", protect, getUserAllPosts);
 
 module.exports = router;

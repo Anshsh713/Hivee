@@ -15,6 +15,9 @@ export const PostProvider = ({ children }) => {
   const [hasMore, setHasMore] = useState(true);
   const [reelMuted, setReelMuted] = useState(true);
   const [postMuted, setPostMuted] = useState(true);
+  const [userPosts, setUserPosts] = useState([]);
+  const [userPostsPage, setUserPostsPage] = useState(1);
+  const [userPostsHasMore, setUserPostsHasMore] = useState(true);
 
   useEffect(() => {
     if (token) {
@@ -161,6 +164,12 @@ export const PostProvider = ({ children }) => {
   };
 
   const like_save_refresh = async (type, typeofpost, postId) => {
+    // NOTE:
+    // A video post can appear in both feed and reels.
+    // For now (small dataset), we update both lists
+    // to keep UI in sync without refresh.
+    // This will be refactored to normalized state later.
+
     if (type === "like") {
       if (typeofpost === "post") {
         setFeed((prev) =>
@@ -350,6 +359,40 @@ export const PostProvider = ({ children }) => {
     }
   };
 
+  const User_Post = async (UserID, pageNumber = 1) => {
+    if (!token) return;
+
+    try {
+      setLoading(true);
+
+      const res = await fetch(
+        `http://localhost:5000/post/user/${UserID}?page=${pageNumber}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      const data = await res.json();
+
+      if (!data.success) {
+        throw new Error(data.message);
+      }
+
+      setUserPosts((prev) =>
+        pageNumber === 1 ? data.posts : [...prev, ...data.posts],
+      );
+
+      setUserPostsPage(pageNumber);
+      setUserPostsHasMore(data.hasMore);
+    } catch (error) {
+      console.error("USER POSTS ERROR:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <PostContext.Provider
       value={{
@@ -357,14 +400,20 @@ export const PostProvider = ({ children }) => {
         setPostMuted,
         reelMuted,
         setReelMuted,
+
+        feed,
+        fetchfeed,
         feedreels,
         fetchfeedReels,
         feedThoughts,
         fetchfeedThoughts,
-        toggleSaved,
+
+        userPosts,
+        userPostsHasMore,
+        User_Post,
+
         toggleLike,
-        feed,
-        fetchfeed,
+        toggleSaved,
         MakingPost,
         loading,
         hasMore,

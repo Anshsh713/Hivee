@@ -6,7 +6,8 @@ import { Outlet, useLocation } from "react-router-dom";
 export default function App() {
   const location = useLocation();
   const hideLayout = location.pathname === "/authpage";
-
+  const footerhide =
+    location.pathname === "/profile" || location.pathname === "reels";
   if (hideLayout) {
     return <Outlet />;
   }
@@ -17,7 +18,7 @@ export default function App() {
       <main className="main-content">
         <Outlet />
       </main>
-      <Footer />
+      {!footerhide && <Footer />}
     </div>
   );
 }
